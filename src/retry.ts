@@ -35,10 +35,18 @@ export function _doRequest(
   let attempt = 0;
   let pendingTimer: NodeJS.Timeout | null = null;
   let settled = false;
+  let abortListenerAttached = false;
+
+  const cleanup = (): void => {
+    if (!abortListenerAttached) return;
+    signal?.removeEventListener('abort', onAbort);
+    abortListenerAttached = false;
+  };
 
   const finish = (err: RawError | null, ...rest: unknown[]): void => {
     if (settled) return;
     settled = true;
+    cleanup();
     callback(err, ...rest);
   };
 
@@ -54,7 +62,10 @@ export function _doRequest(
     finish(new CancellationError());
     return;
   }
-  signal?.addEventListener('abort', onAbort);
+  if (signal) {
+    signal.addEventListener('abort', onAbort);
+    abortListenerAttached = true;
+  }
 
   const tryOnce = (): void => {
     if (settled) return;
