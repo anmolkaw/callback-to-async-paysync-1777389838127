@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "nextdev-cursor-extension": {
+      "command": "node",
+      "args": [
+        "/var/folders/gm/bv9gmxns23j4jm_p3qpwpff00000gn/T/nextdev-interviews/callback-to-async-paysync-1777389838127/.nextdev/mcp-bridge.cjs"
+      ]
+    }
+  }
+}
